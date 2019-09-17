@@ -6,12 +6,11 @@ import com.space.service.ShipDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/rest")
@@ -64,5 +63,25 @@ public class ShipController {
         return new ResponseEntity<>((int) shipDataService.findBy(name, planet, shipType, after, before, isUsed, minSpeed,
                 maxSpeed, minCrewSize, maxCrewSize, minRating, maxRating, ShipOrder.ID, 0, 3)
                 .getTotalElements(), HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/ships/{id}")
+    public ResponseEntity<Ship> getShip(@PathVariable String id)
+    {
+        try {
+            Long shipId = Long.parseLong(id);
+            if (shipId <= 0) throw new Exception();
+            Optional<Ship> optionalShip = shipDataService.getShipById(shipId);
+            if (optionalShip.isPresent()){
+                return new ResponseEntity<>(optionalShip.get(), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

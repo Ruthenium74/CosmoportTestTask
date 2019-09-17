@@ -19,6 +19,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -26,17 +27,6 @@ public class ShipDataService {
 
     @Autowired
     private ShipRepository shipRepository;
-
-    public List<Ship> getAllShips()
-    {
-        return shipRepository.findAll();
-    }
-
-    public List<Ship> getAllShips(int pageNumber, int pageSize, ShipOrder order)
-    {
-        Sort sort = new Sort(Sort.Direction.ASC, order.getFieldName());
-        return shipRepository.findAll(new PageRequest(pageNumber, pageSize, sort)).getContent();
-    }
 
     public Page<Ship> findBy(String name, String planet, ShipType shipType, Long after, Long before,
                              Boolean isUsed, Double minSpeed, Double maxSpeed, Integer minCrewSize,
@@ -74,5 +64,10 @@ public class ShipDataService {
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         }, new PageRequest(pageNumber, pageSize, new Sort(Sort.Direction.ASC, order.getFieldName())));
+    }
+
+    public Optional<Ship> getShipById(Long id)
+    {
+        return shipRepository.findById(id);
     }
 }
