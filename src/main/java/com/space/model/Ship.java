@@ -96,7 +96,7 @@ public class Ship {
     protected Ship() {}
 
     public void updateShip(Ship updatingShipEntity) {
-        if (updatingShipEntity.getName() != null && !updatingShipEntity.getName().isEmpty()) {
+        if (updatingShipEntity.getName() != null) {
             this.setName(updatingShipEntity.getName());
         }
 
@@ -108,7 +108,7 @@ public class Ship {
             this.setShipType(updatingShipEntity.getShipType());
         }
 
-        if (updatingShipEntity.getProdDate() != null && updatingShipEntity.getProdDate().getYear() > 10) {
+        if (updatingShipEntity.getProdDate() != null) {
             this.setProdDate(updatingShipEntity.getProdDate());
         }
 
