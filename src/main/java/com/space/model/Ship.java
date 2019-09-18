@@ -7,16 +7,16 @@ import java.util.Date;
 public class Ship {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String planet;
     @Enumerated(EnumType.STRING)
     private ShipType shipType;
     private Date prodDate;
-    private boolean isUsed;
-    private double speed;
-    private int crewSize;
+    private Boolean isUsed;
+    private Double speed;
+    private Integer crewSize;
     private double rating;
 
     public long getId() {
@@ -55,7 +55,7 @@ public class Ship {
         this.prodDate = prodDate;
     }
 
-    public boolean isUsed() {
+    public Boolean isUsed() {
         return isUsed;
     }
 
@@ -63,24 +63,34 @@ public class Ship {
         isUsed = used;
     }
 
-    public double getSpeed() {
+    public Double getSpeed() {
         return speed;
     }
 
-    public void setSpeed(double speed) {
+    public void setSpeed(Double speed) {
         this.speed = speed;
     }
 
-    public int getCrewSize() {
+    public Integer getCrewSize() {
         return crewSize;
     }
 
-    public void setCrewSize(int crewSize) {
+    public void setCrewSize(Integer crewSize) {
         this.crewSize = crewSize;
     }
 
     public double getRating() {
         return rating;
+    }
+
+    public void calculateRatingAndSet()
+    {
+        double numerator = 80 * speed * (isUsed ? 0.5 : 1);
+        double denominator = 1119 - prodDate.getYear() + 1;
+        double preRating = (numerator / denominator) * 100;
+        preRating = Math.round(preRating);
+        preRating = preRating / 100;
+        rating = preRating;
     }
 
     protected Ship() {}

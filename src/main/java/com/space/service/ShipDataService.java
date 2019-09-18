@@ -70,4 +70,8 @@ public class ShipDataService {
     {
         return shipRepository.findById(id);
     }
+
+    public Ship saveShip(Ship newShip) {
+        return shipRepository.save(newShip);
+    }
 }

@@ -2,10 +2,12 @@ package com.space.controller;
 
 import com.space.model.Ship;
 import com.space.model.ShipType;
+import com.space.model.ShipValidator;
 import com.space.service.ShipDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -65,7 +67,18 @@ public class ShipController {
                 .getTotalElements(), HttpStatus.OK);
     }
 
-
+    @PostMapping("/ships")
+    public ResponseEntity<Ship> createShip(@RequestBody Ship newShip)
+    {
+        if (newShip.isUsed() == null) newShip.setUsed(false);
+        BeanPropertyBindingResult result = new BeanPropertyBindingResult(newShip, "newShip");
+        new ShipValidator().validate(newShip, result);
+        if (result.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        newShip.calculateRatingAndSet();
+        return new ResponseEntity<>(shipDataService.saveShip(newShip), HttpStatus.OK);
+    }
 
     @GetMapping("/ships/{id}")
     public ResponseEntity<Ship> getShip(@PathVariable String id)
