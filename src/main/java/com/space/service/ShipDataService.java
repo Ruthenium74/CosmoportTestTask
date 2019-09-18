@@ -74,4 +74,8 @@ public class ShipDataService {
     public Ship saveShip(Ship newShip) {
         return shipRepository.save(newShip);
     }
+
+    public void delete(Long id) {
+        shipRepository.deleteById(id);
+    }
 }

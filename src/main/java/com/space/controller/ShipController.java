@@ -121,6 +121,23 @@ public class ShipController {
         }
     }
 
+    @DeleteMapping("/ships/{id}")
+    public ResponseEntity delete(@PathVariable String id)
+    {
+        try {
+            Long shipId = validationAndReturnId(id);
+            Optional<Ship> optionalShip = shipDataService.getShipById(shipId);
+            if (optionalShip.isPresent()) {
+                shipDataService.delete(shipId);
+                return new ResponseEntity(HttpStatus.OK);
+            } else {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private Long validationAndReturnId(String idString) throws Exception
     {
         Long shipId = Long.parseLong(idString);
