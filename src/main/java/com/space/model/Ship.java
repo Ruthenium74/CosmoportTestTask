@@ -95,5 +95,34 @@ public class Ship {
 
     protected Ship() {}
 
+    public void updateShip(Ship updatingShipEntity) {
+        if (updatingShipEntity.getName() != null && !updatingShipEntity.getName().isEmpty()) {
+            this.setName(updatingShipEntity.getName());
+        }
+
+        if (updatingShipEntity.getPlanet() != null && !updatingShipEntity.getPlanet().isEmpty()) {
+            this.setPlanet(updatingShipEntity.getPlanet());
+        }
+
+        if (updatingShipEntity.getShipType() != null) {
+            this.setShipType(updatingShipEntity.getShipType());
+        }
+
+        if (updatingShipEntity.getProdDate() != null && updatingShipEntity.getProdDate().getYear() > 10) {
+            this.setProdDate(updatingShipEntity.getProdDate());
+        }
+
+        if (updatingShipEntity.isUsed() != null) {
+            this.setUsed(updatingShipEntity.isUsed());
+        }
+
+        if (updatingShipEntity.getSpeed() != null) {
+            this.setSpeed(updatingShipEntity.getSpeed());
+        }
+
+        if (updatingShipEntity.getCrewSize() != null) {
+            this.setCrewSize(updatingShipEntity.getCrewSize());
+        }
+    }
 
 }

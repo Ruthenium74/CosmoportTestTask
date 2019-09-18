@@ -84,8 +84,7 @@ public class ShipController {
     public ResponseEntity<Ship> getShip(@PathVariable String id)
     {
         try {
-            Long shipId = Long.parseLong(id);
-            if (shipId <= 0) throw new Exception();
+            Long shipId = validationAndReturnId(id);
             Optional<Ship> optionalShip = shipDataService.getShipById(shipId);
             if (optionalShip.isPresent()){
                 return new ResponseEntity<>(optionalShip.get(), HttpStatus.OK);
@@ -96,5 +95,36 @@ public class ShipController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/ships/{id}")
+    public ResponseEntity<Ship> updateShip(@RequestBody Ship updatingShip, @PathVariable String id)
+    {
+        try {
+            Long shipId = validationAndReturnId(id);
+            Optional<Ship> optionalShip = shipDataService.getShipById(shipId);
+            if (optionalShip.isPresent()) {
+                Ship currentShipEntity = optionalShip.get();
+                currentShipEntity.updateShip(updatingShip);
+                BeanPropertyBindingResult result = new BeanPropertyBindingResult(currentShipEntity, "newShip");
+                new ShipValidator().validate(currentShipEntity, result);
+                if (result.hasErrors()) {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+                currentShipEntity.calculateRatingAndSet();
+                return new ResponseEntity<>(shipDataService.saveShip(currentShipEntity), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private Long validationAndReturnId(String idString) throws Exception
+    {
+        Long shipId = Long.parseLong(idString);
+        if (shipId <= 0) throw new Exception();
+        return shipId;
     }
 }
